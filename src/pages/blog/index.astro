@@ -3,45 +3,74 @@ import Base from '../../layouts/Base.astro';
 import Nav from '../../components/Nav.astro';
 
 const posts = [
-  { slug: 'how-much-do-meetings-cost', title: 'How Much Do Meetings Really Cost? The Numbers Will Surprise You', description: 'The average company wastes $25,000+ per employee per year on meetings.', date: '2026-02-14', readTime: '5 min' },
-  { slug: 'meeting-cost-by-company-size', title: 'Meeting Cost by Company Size: From Startups to Enterprise', description: 'How meeting costs scale from 5-person startups to 10,000-person enterprises.', date: '2026-02-13', readTime: '6 min' },
-  { slug: 'could-this-meeting-have-been-an-email', title: 'Could This Meeting Have Been an Email? A Decision Framework', description: 'A simple framework to decide when a meeting is necessary.', date: '2026-02-12', readTime: '4 min' },
-  { slug: 'reduce-meeting-costs', title: '7 Ways to Cut Your Meeting Costs by 40% This Quarter', description: 'Practical strategies to reduce meeting bloat without losing collaboration.', date: '2026-02-11', readTime: '5 min' },
-  { slug: 'standup-meeting-cost', title: 'How Much Does Your Daily Standup Really Cost Per Year?', description: 'Daily standups seem harmless. Multiply by 240 working days and it hurts.', date: '2026-02-10', readTime: '4 min' },
-  { slug: 'fully-loaded-employee-cost', title: 'How to Calculate the Fully Loaded Cost of an Employee', description: 'Your employees cost 1.25-1.4x their base salary. Here is the true hourly rate.', date: '2026-02-09', readTime: '5 min' },
-  { slug: 'time-spent-in-meetings-statistics', title: 'Time Spent in Meetings: 2026 Statistics and Trends', description: 'How much time does the average worker spend in meetings? Key statistics.', date: '2026-02-08', readTime: '5 min' },
-  { slug: 'meeting-free-days', title: 'Meeting-Free Days: Why They Work and How to Implement Them', description: 'Companies with no-meeting days report significant productivity gains.', date: '2026-02-07', readTime: '5 min' },
-  { slug: 'context-switching-cost-meetings', title: 'The Hidden Cost of Context Switching After Meetings', description: 'A 30-minute meeting costs nearly double when you factor in refocus time.', date: '2026-02-06', readTime: '4 min' },
-  { slug: 'cancel-recurring-meetings', title: 'How to Justify Canceling Recurring Meetings (With Data)', description: 'Step-by-step guide to identifying which recurring meetings to cancel.', date: '2026-02-05', readTime: '4 min' },
-  { slug: 'zoom-meeting-cost', title: "The True Cost of Zoom Meetings: It's Not Just the Subscription", description: 'The salary cost of Zoom meetings dwarfs the software bill by 100x.', date: '2026-02-04', readTime: '4 min' },
+  { slug: 'how-much-do-meetings-cost', title: 'How Much Do Meetings Really Cost?', description: 'The average company wastes $25,000+ per employee per year on meetings.', date: '2026-02-14', readTime: '5 min', icon: '💸', tag: 'Data' },
+  { slug: 'meeting-cost-by-company-size', title: 'Meeting Cost by Company Size', description: 'From 5-person startups to 10,000-person enterprises — with exact calculations.', date: '2026-02-13', readTime: '6 min', icon: '🏢', tag: 'Analysis' },
+  { slug: 'could-this-meeting-have-been-an-email', title: 'Could This Have Been an Email?', description: 'A decision framework for when meetings are necessary vs. burning money.', date: '2026-02-12', readTime: '4 min', icon: '📧', tag: 'Framework' },
+  { slug: 'reduce-meeting-costs', title: 'Cut Meeting Costs by 40%', description: '7 practical strategies to reduce meeting bloat this quarter.', date: '2026-02-11', readTime: '5 min', icon: '✂️', tag: 'Strategy' },
+  { slug: 'standup-meeting-cost', title: 'Your Daily Standup Cost Per Year', description: '15 minutes × 240 days. The number gets uncomfortable fast.', date: '2026-02-10', readTime: '4 min', icon: '⏱', tag: 'Calculator' },
+  { slug: 'fully-loaded-employee-cost', title: 'Fully Loaded Employee Cost', description: 'Your employees cost 1.25-1.4× their base salary. Here is the true rate.', date: '2026-02-09', readTime: '5 min', icon: '🧮', tag: 'Guide' },
+  { slug: 'time-spent-in-meetings-statistics', title: 'Meeting Statistics 2026', description: 'How much time does the average worker spend in meetings? Key data.', date: '2026-02-08', readTime: '5 min', icon: '📊', tag: 'Data' },
+  { slug: 'meeting-free-days', title: 'Meeting-Free Days Work', description: 'Companies with no-meeting days report 25-35% productivity gains.', date: '2026-02-07', readTime: '5 min', icon: '🚫', tag: 'Strategy' },
+  { slug: 'context-switching-cost-meetings', title: 'The Context Switching Tax', description: 'A 30-minute meeting costs nearly double when you add refocus time.', date: '2026-02-06', readTime: '4 min', icon: '🧠', tag: 'Research' },
+  { slug: 'cancel-recurring-meetings', title: 'Cancel Recurring Meetings', description: 'How to identify and justify cutting meetings — with data that works.', date: '2026-02-05', readTime: '4 min', icon: '🗑️', tag: 'Playbook' },
+  { slug: 'zoom-meeting-cost', title: 'The True Cost of Zoom Meetings', description: 'The salary cost dwarfs your Zoom subscription by 100×.', date: '2026-02-04', readTime: '4 min', icon: '📹', tag: 'Analysis' },
 ];
 ---
 <Base title="Meeting Cost Insights & Statistics — MeetCost Blog" description="Data-driven articles about meeting costs, meeting productivity, and how to reduce wasted time." canonical="/blog">
   <Nav />
-  <section class="blog-list">
-    <div class="blog-header"><h1>Meeting Cost Insights</h1><p>Data-driven articles about the true cost of meetings — and how to reduce them.</p></div>
-    <div class="posts">
-      {posts.map(post => (
-        <a href={`/blog/${post.slug}`} class="post-card">
-          <div class="post-meta">{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} · {post.readTime} read</div>
-          <h2 class="post-title">{post.title}</h2>
-          <p class="post-desc">{post.description}</p>
-          <span class="post-link">Read article →</span>
+  <section class="blog-page">
+    <div class="blog-header">
+      <h1>Insights</h1>
+      <p>The data behind your most expensive habit.</p>
+    </div>
+    <div class="grid">
+      {posts.map((post, i) => (
+        <a href={`/blog/${post.slug}`} class="card">
+          <div class="card-icon">{post.icon}</div>
+          <div class="card-tag">{post.tag}</div>
+          <h2 class="card-title">{post.title}</h2>
+          <p class="card-desc">{post.description}</p>
+          <div class="card-footer">
+            <span class="card-time">{post.readTime}</span>
+            <span class="card-arrow">→</span>
+          </div>
         </a>
       ))}
     </div>
   </section>
 </Base>
+
 <style>
-  .blog-list{max-width:680px;margin:0 auto;padding:48px 24px 80px;position:relative;z-index:1}
+  .blog-page{max-width:960px;margin:0 auto;padding:48px 24px 80px;position:relative;z-index:1}
   .blog-header{text-align:center;margin-bottom:48px}
-  .blog-header h1{font-size:32px;font-weight:800;margin-bottom:12px}
-  .blog-header p{font-size:16px;color:var(--text-dim)}
-  .posts{display:flex;flex-direction:column;gap:20px}
-  .post-card{display:block;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;transition:all .2s;text-decoration:none;color:var(--text)}
-  .post-card:hover{border-color:var(--accent);transform:translateY(-2px);text-decoration:none}
-  .post-meta{font-size:12px;color:var(--text-dim);font-family:var(--font-mono);margin-bottom:10px}
-  .post-title{font-size:20px;font-weight:700;margin-bottom:10px;line-height:1.3}
-  .post-desc{font-size:14px;color:var(--text-dim);line-height:1.6;margin-bottom:12px}
-  .post-link{font-size:13px;color:var(--accent);font-weight:600}
+  .blog-header h1{font-size:36px;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px}
+  .blog-header p{font-size:16px;color:var(--text-dim);font-weight:300}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+  .card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;text-decoration:none;color:var(--text);transition:all .25s;position:relative;overflow:hidden}
+  .card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.3);text-decoration:none}
+  .card:hover .card-arrow{transform:translateX(4px);color:var(--accent)}
+  .card:hover .card-icon{transform:scale(1.1)}
+
+  .card-icon{font-size:28px;margin-bottom:16px;transition:transform .25s}
+
+  .card-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);background:var(--accent-glow);padding:4px 10px;border-radius:6px;margin-bottom:14px;width:fit-content}
+
+  .card-title{font-size:17px;font-weight:700;line-height:1.3;margin-bottom:10px;letter-spacing:-0.2px}
+
+  .card-desc{font-size:13px;color:var(--text-dim);line-height:1.5;flex:1;margin-bottom:16px}
+
+  .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+  .card-time{font-size:11px;color:var(--text-dim);font-family:var(--font-mono)}
+  .card-arrow{font-size:16px;color:var(--text-dim);transition:all .25s}
+
+  @media(max-width:768px){
+    .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+    .card{padding:20px}
+    .card-title{font-size:15px}
+  }
+  @media(max-width:480px){
+    .grid{grid-template-columns:1fr;gap:12px}
+  }
 </style>
