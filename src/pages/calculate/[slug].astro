@@ -1,0 +1,193 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+
+export function getStaticPaths() {
+  const people = [2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20, 25, 30, 50];
+  const durations = [15, 30, 45, 60, 90, 120];
+  const paths = [];
+
+  for (const p of people) {
+    for (const d of durations) {
+      const cost50 = (p * 50 * d / 60);
+      const durLabel = d >= 60 ? (d/60) + '-hour' : d + '-minute';
+      const durSlug = d >= 60 ? (d/60) + 'h' : d + 'min';
+      paths.push({
+        params: { slug: p + '-people-' + durSlug },
+        props: { people: p, duration: d, title: 'How Much Does a ' + durLabel + ' Meeting With ' + p + ' People Cost?', description: 'A ' + durLabel + ' meeting with ' + p + ' people costs around $' + cost50.toFixed(0) + ' at $50/hr average. Calculate the exact cost for your team.' }
+      });
+    }
+  }
+
+  const roles = [
+    { slug: 'engineers', label: 'Engineers', rate: 65, people: 6, duration: 60 },
+    { slug: 'designers', label: 'Designers', rate: 55, people: 5, duration: 45 },
+    { slug: 'managers', label: 'Managers', rate: 70, people: 8, duration: 60 },
+    { slug: 'executives', label: 'Executives', rate: 100, people: 5, duration: 60 },
+    { slug: 'sales-team', label: 'Sales Team', rate: 50, people: 8, duration: 30 },
+    { slug: 'startup-team', label: 'Startup Team', rate: 40, people: 5, duration: 30 },
+    { slug: 'remote-team', label: 'Remote Team', rate: 50, people: 7, duration: 45 },
+    { slug: 'product-team', label: 'Product Team', rate: 60, people: 6, duration: 60 },
+  ];
+
+  for (const role of roles) {
+    const cost = (role.people * role.rate * role.duration / 60);
+    const yearly = cost * 5 * 48;
+    paths.push({
+      params: { slug: role.slug },
+      props: { people: role.people, duration: role.duration, rate: role.rate, roleLabel: role.label, title: 'Meeting Cost Calculator for ' + role.label, description: 'A typical ' + role.label.toLowerCase() + ' meeting costs $' + cost.toFixed(0) + ' per session. That is $' + yearly.toLocaleString() + '/year if daily.', costExact: cost, yearlyExact: yearly }
+    });
+  }
+
+  return paths;
+}
+
+const props = Astro.props;
+const { people, duration, title, description } = props;
+const rate = props.rate || null;
+const roleLabel = props.roleLabel || null;
+const costExact = props.costExact || 0;
+const yearlyExact = props.yearlyExact || 0;
+const isRole = !!roleLabel;
+const durLabel = duration >= 60 ? (duration/60) + ' hour' + (duration > 60 ? 's' : '') : duration + ' minutes';
+const D = '$';
+
+// Pre-compute values for the template
+const rates = [25, 30, 40, 50, 60, 75, 100];
+const tableRows = rates.map(r => ({
+  rate: r,
+  cost: (people * r * duration / 60),
+  perMin: (people * r / 60),
+  yearly: (people * r * duration / 60 * 5 * 48),
+}));
+
+const personHours = (people * duration / 60).toFixed(1);
+const costAt50 = (people * 50 * duration / 60).toFixed(0);
+const yearlyAt50Daily = (people * 50 * duration / 60 * 5 * 48).toLocaleString();
+const yearlyAt50Weekly = (people * 50 * duration / 60 * 48).toLocaleString();
+const halfPeopleSavings = (Math.floor(people/2) * 50 * duration / 60 * 48).toLocaleString();
+const twoLessSavings = (2 * 50 * duration / 60 * 48).toLocaleString();
+const shorterDur = Math.max(15, duration - 15);
+const optimizeTip = people <= 4
+  ? 'With ' + people + ' people, your meeting is already lean. Focus on keeping the duration tight — can you do ' + shorterDur + ' minutes instead of ' + duration + '? Even small reductions compound over a year.'
+  : people <= 8
+  ? 'With ' + people + ' attendees, ask whether everyone needs to be there. If 2-3 people are mostly listening, send them notes instead. Reducing by 2 people saves ' + D + twoLessSavings + ' per year on a weekly cadence.'
+  : 'With ' + people + ' people, this is a large meeting. Research shows decision quality drops above 7 attendees. Consider splitting into a core group of 5-6 and sharing outcomes async. Cutting the list in half saves ' + D + halfPeopleSavings + '/year weekly.';
+const perMinRole = isRole ? (people * rate / 60).toFixed(2) : '0';
+---
+<Base title={title + ' — MeetCost'} description={description} canonical={'/calculate/' + Astro.params.slug}>
+  <Nav />
+  <div class="calc-page">
+    <div class="calc-hero">
+      <h1>{title}</h1>
+      <p class="calc-subtitle">{description}</p>
+    </div>
+
+    {!isRole && (
+      <div class="cost-table">
+        <div class="cost-row header">
+          <div class="cost-cell">Avg Hourly Rate</div>
+          <div class="cost-cell">Meeting Cost</div>
+          <div class="cost-cell">Per Minute</div>
+          <div class="cost-cell">Yearly (daily)</div>
+        </div>
+        {tableRows.map(row => (
+          <div class="cost-row">
+            <div class="cost-cell rate">{D}{row.rate}/hr</div>
+            <div class="cost-cell amount">{D}{row.cost.toFixed(0)}</div>
+            <div class="cost-cell">{D}{row.perMin.toFixed(2)}/min</div>
+            <div class="cost-cell yearly">{D}{row.yearly.toLocaleString()}/yr</div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    {isRole && (
+      <div class="role-result">
+        <div class="role-stat">
+          <span class="role-number">{D}{costExact.toFixed(0)}</span>
+          <span class="role-label">per meeting ({people} people × {D}{rate}/hr × {durLabel})</span>
+        </div>
+        <div class="role-stat yearly">
+          <span class="role-number">{D}{yearlyExact.toLocaleString()}</span>
+          <span class="role-label">per year if this meeting happens daily</span>
+        </div>
+      </div>
+    )}
+
+    <div class="calc-cta">
+      <iframe src="/calculator.html" title="Meeting Cost Calculator" class="calc-frame" id="calcFrame"></iframe>
+    </div>
+
+    <div class="calc-content">
+      {!isRole && (
+        <div>
+          <h2>Breaking Down the Cost</h2>
+          <p>
+            A {durLabel} meeting with {people} people consumes <strong>{personHours} person-hours</strong> of
+            collective effort. At a fully loaded cost of {D}50/hour, that is <strong>{D}{costAt50} per meeting</strong>.
+            If it happens daily, that is <strong>{D}{yearlyAt50Daily} per year</strong>. Even weekly, it adds up
+            to <strong>{D}{yearlyAt50Weekly} annually</strong>.
+          </p>
+          <h2>How to Optimize a {people}-Person Meeting</h2>
+          <p set:html={optimizeTip} />
+        </div>
+      )}
+      {isRole && (
+        <div>
+          <h2>Meeting Costs for {roleLabel}</h2>
+          <p>
+            {roleLabel} meetings tend to be among the most expensive due to higher compensation and
+            opportunity cost. At {D}{rate}/hour fully loaded, every minute with {people} {roleLabel.toLowerCase()} costs {D}{perMinRole}.
+            Protect their focus time, batch meetings together, and reserve synchronous time for decisions
+            that genuinely require real-time discussion.
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>MeetCost — Free meeting cost calculator. No tracking. No signup. Just math that hurts.</p>
+      <div class="footer-links">
+        <a href="/">Calculator</a>
+        <a href="/blog">Insights</a>
+      </div>
+    </div>
+  </footer>
+</Base>
+
+<style>
+  .calc-page{max-width:720px;margin:0 auto;padding:48px 24px 40px;position:relative;z-index:1}
+  .calc-hero{text-align:center;margin-bottom:40px}
+  .calc-hero h1{font-size:clamp(24px,4vw,36px);font-weight:800;line-height:1.2;margin-bottom:16px;letter-spacing:-0.3px}
+  .calc-subtitle{font-size:16px;color:var(--text-dim);line-height:1.6;max-width:560px;margin:0 auto}
+  .cost-table{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:40px}
+  .cost-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:14px 20px;border-bottom:1px solid var(--border)}
+  .cost-row:last-child{border-bottom:none}
+  .cost-row.header{background:var(--surface-2);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);padding:12px 20px}
+  .cost-cell{font-family:var(--font-mono);font-size:14px;text-align:center}
+  .cost-cell.rate{color:var(--text-dim)}
+  .cost-cell.amount{color:var(--accent);font-weight:500;font-size:16px}
+  .cost-cell.yearly{color:var(--red);font-size:13px}
+  .role-result{display:flex;gap:16px;margin-bottom:40px}
+  .role-stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center}
+  .role-stat.yearly{border-color:rgba(255,68,102,.3);background:linear-gradient(135deg,var(--surface),rgba(255,68,102,.08))}
+  .role-number{display:block;font-family:var(--font-mono);font-size:36px;font-weight:500;color:var(--accent);margin-bottom:8px}
+  .role-stat.yearly .role-number{color:var(--red)}
+  .role-label{font-size:13px;color:var(--text-dim)}
+  .calc-cta{margin-bottom:40px}
+  .calc-frame{width:100%;height:700px;border:none;border-radius:16px;background:var(--surface)}
+  .calc-content{line-height:1.8;font-size:16px}
+  .calc-content h2{font-size:22px;font-weight:700;margin:36px 0 12px}
+  .calc-content p{color:rgba(232,232,240,0.85);margin-bottom:16px}
+  .calc-content strong{color:var(--text);font-weight:600}
+  .site-footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+  .footer-inner{max-width:680px;margin:0 auto}
+  .footer-inner p{font-size:13px;color:var(--text-dim);margin-bottom:16px}
+  .footer-links{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+  .footer-links a{font-size:13px;color:var(--text-dim);transition:color .15s}
+  .footer-links a:hover{color:var(--accent);text-decoration:none}
+  @media(max-width:600px){.cost-row{grid-template-columns:1fr 1fr;gap:8px;padding:10px 14px}.cost-row.header{display:none}.role-result{flex-direction:column}.calc-frame{height:600px}}
+</style>

@@ -3,54 +3,23 @@ import Base from '../../layouts/Base.astro';
 import Nav from '../../components/Nav.astro';
 
 const posts = [
-  {
-    slug: 'how-much-do-meetings-cost',
-    title: 'How Much Do Meetings Really Cost? The Numbers Will Surprise You',
-    description: 'The average company wastes $25,000+ per employee per year on meetings. Here\'s the real math behind meeting costs.',
-    date: '2026-02-14',
-    readTime: '5 min',
-  },
-  {
-    slug: 'meeting-cost-by-company-size',
-    title: 'Meeting Cost by Company Size: From Startups to Enterprise',
-    description: 'How meeting costs scale from 5-person startups to 10,000-person enterprises — with exact calculations and benchmarks.',
-    date: '2026-02-13',
-    readTime: '6 min',
-  },
-  {
-    slug: 'could-this-meeting-have-been-an-email',
-    title: 'Could This Meeting Have Been an Email? A Decision Framework',
-    description: 'A simple framework to decide when a meeting is necessary and when you\'re burning money that could be an async message.',
-    date: '2026-02-12',
-    readTime: '4 min',
-  },
-  {
-    slug: 'reduce-meeting-costs',
-    title: '7 Ways to Cut Your Meeting Costs by 40% This Quarter',
-    description: 'Practical strategies that companies use to reduce meeting bloat without losing collaboration. Backed by data.',
-    date: '2026-02-11',
-    readTime: '5 min',
-  },
-  {
-    slug: 'standup-meeting-cost',
-    title: 'How Much Does Your Daily Standup Really Cost Per Year?',
-    description: 'Daily standups seem short and harmless. But multiply by 240 working days and the number gets uncomfortable fast.',
-    date: '2026-02-10',
-    readTime: '4 min',
-  },
+  { slug: 'how-much-do-meetings-cost', title: 'How Much Do Meetings Really Cost? The Numbers Will Surprise You', description: 'The average company wastes $25,000+ per employee per year on meetings.', date: '2026-02-14', readTime: '5 min' },
+  { slug: 'meeting-cost-by-company-size', title: 'Meeting Cost by Company Size: From Startups to Enterprise', description: 'How meeting costs scale from 5-person startups to 10,000-person enterprises.', date: '2026-02-13', readTime: '6 min' },
+  { slug: 'could-this-meeting-have-been-an-email', title: 'Could This Meeting Have Been an Email? A Decision Framework', description: 'A simple framework to decide when a meeting is necessary.', date: '2026-02-12', readTime: '4 min' },
+  { slug: 'reduce-meeting-costs', title: '7 Ways to Cut Your Meeting Costs by 40% This Quarter', description: 'Practical strategies to reduce meeting bloat without losing collaboration.', date: '2026-02-11', readTime: '5 min' },
+  { slug: 'standup-meeting-cost', title: 'How Much Does Your Daily Standup Really Cost Per Year?', description: 'Daily standups seem harmless. Multiply by 240 working days and it hurts.', date: '2026-02-10', readTime: '4 min' },
+  { slug: 'fully-loaded-employee-cost', title: 'How to Calculate the Fully Loaded Cost of an Employee', description: 'Your employees cost 1.25-1.4x their base salary. Here is the true hourly rate.', date: '2026-02-09', readTime: '5 min' },
+  { slug: 'time-spent-in-meetings-statistics', title: 'Time Spent in Meetings: 2026 Statistics and Trends', description: 'How much time does the average worker spend in meetings? Key statistics.', date: '2026-02-08', readTime: '5 min' },
+  { slug: 'meeting-free-days', title: 'Meeting-Free Days: Why They Work and How to Implement Them', description: 'Companies with no-meeting days report significant productivity gains.', date: '2026-02-07', readTime: '5 min' },
+  { slug: 'context-switching-cost-meetings', title: 'The Hidden Cost of Context Switching After Meetings', description: 'A 30-minute meeting costs nearly double when you factor in refocus time.', date: '2026-02-06', readTime: '4 min' },
+  { slug: 'cancel-recurring-meetings', title: 'How to Justify Canceling Recurring Meetings (With Data)', description: 'Step-by-step guide to identifying which recurring meetings to cancel.', date: '2026-02-05', readTime: '4 min' },
+  { slug: 'zoom-meeting-cost', title: "The True Cost of Zoom Meetings: It's Not Just the Subscription", description: 'The salary cost of Zoom meetings dwarfs the software bill by 100x.', date: '2026-02-04', readTime: '4 min' },
 ];
 ---
-<Base
-  title="Meeting Cost Insights & Statistics — MeetCost Blog"
-  description="Data-driven articles about meeting costs, meeting productivity, and how to reduce wasted time in your organization."
-  canonical="/blog"
->
+<Base title="Meeting Cost Insights & Statistics — MeetCost Blog" description="Data-driven articles about meeting costs, meeting productivity, and how to reduce wasted time." canonical="/blog">
   <Nav />
   <section class="blog-list">
-    <div class="blog-header">
-      <h1>Meeting Cost Insights</h1>
-      <p>Data-driven articles about the true cost of meetings — and how to reduce them.</p>
-    </div>
+    <div class="blog-header"><h1>Meeting Cost Insights</h1><p>Data-driven articles about the true cost of meetings — and how to reduce them.</p></div>
     <div class="posts">
       {posts.map(post => (
         <a href={`/blog/${post.slug}`} class="post-card">
@@ -63,7 +32,6 @@ const posts = [
     </div>
   </section>
 </Base>
-
 <style>
   .blog-list{max-width:680px;margin:0 auto;padding:48px 24px 80px;position:relative;z-index:1}
   .blog-header{text-align:center;margin-bottom:48px}
