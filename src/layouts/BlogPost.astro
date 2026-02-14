@@ -1,0 +1,68 @@
+---
+import Base from './Base.astro';
+import Nav from '../components/Nav.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  readTime: string;
+  canonical?: string;
+}
+
+const { title, description, date, readTime, canonical } = Astro.props;
+const formattedDate = new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+<Base title={`${title} — MeetingCost`} description={description} canonical={canonical} type="article">
+  <Nav />
+  <article class="article">
+    <div class="article-header">
+      <div class="article-meta">{formattedDate} · {readTime} read</div>
+      <h1 class="article-title">{title}</h1>
+      <p class="article-desc">{description}</p>
+    </div>
+    <div class="article-body">
+      <slot />
+    </div>
+    <div class="article-cta">
+      <p>Ready to see the real cost?</p>
+      <a href="/" class="cta-btn">Try the Calculator →</a>
+    </div>
+  </article>
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": title,
+    "description": description,
+    "datePublished": date,
+    "publisher": {
+      "@type": "Organization",
+      "name": "MeetingCost",
+      "url": "https://meetcost.co"
+    }
+  })} />
+</Base>
+
+<style>
+  .article{max-width:680px;margin:0 auto;padding:48px 24px 80px;position:relative;z-index:1}
+  .article-header{margin-bottom:48px;text-align:center}
+  .article-meta{font-size:13px;color:var(--text-dim);margin-bottom:16px;font-family:var(--font-mono)}
+  .article-title{font-size:clamp(28px,5vw,42px);font-weight:800;line-height:1.15;margin-bottom:16px;letter-spacing:-0.5px}
+  .article-desc{font-size:17px;color:var(--text-dim);line-height:1.6;max-width:520px;margin:0 auto}
+  .article-body{line-height:1.8;font-size:16px;color:var(--text)}
+  .article-body :global(h2){font-size:24px;font-weight:700;margin:48px 0 16px;letter-spacing:-0.3px}
+  .article-body :global(h3){font-size:19px;font-weight:600;margin:36px 0 12px}
+  .article-body :global(p){margin-bottom:20px;color:rgba(232,232,240,0.85)}
+  .article-body :global(strong){color:var(--text);font-weight:600}
+  .article-body :global(ul),.article-body :global(ol){margin:0 0 20px 24px;color:rgba(232,232,240,0.85)}
+  .article-body :global(li){margin-bottom:8px}
+  .article-body :global(blockquote){border-left:3px solid var(--accent);padding:12px 20px;margin:24px 0;background:var(--surface);border-radius:0 8px 8px 0;font-style:italic;color:var(--text-dim)}
+  .article-body :global(.stat-callout){background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px;text-align:center;margin:32px 0}
+  .article-body :global(.stat-number){font-family:var(--font-mono);font-size:48px;font-weight:500;color:var(--accent);display:block;margin-bottom:8px}
+  .article-body :global(.stat-label){font-size:14px;color:var(--text-dim)}
+  .article-cta{text-align:center;margin-top:64px;padding:40px;background:var(--surface);border:1px solid var(--border);border-radius:16px}
+  .article-cta p{font-size:18px;font-weight:600;margin-bottom:16px}
+  .cta-btn{display:inline-block;padding:14px 32px;background:var(--accent);color:var(--bg);font-weight:700;border-radius:12px;font-size:15px;text-decoration:none;transition:all .2s}
+  .cta-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,232,143,.3);text-decoration:none}
+</style>

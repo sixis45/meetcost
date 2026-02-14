@@ -1,0 +1,73 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  type?: string;
+}
+
+const { title, description, canonical, ogImage = '/og-default.png', type = 'website' } = Astro.props;
+const siteUrl = 'https://meetcost.co';
+const fullCanonical = canonical ? `${siteUrl}${canonical}` : Astro.url.href;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <link rel="canonical" href={fullCanonical}>
+
+  <!-- Open Graph -->
+  <meta property="og:type" content={type}>
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={fullCanonical}>
+  <meta property="og:image" content={`${siteUrl}${ogImage}`}>
+  <meta property="og:site_name" content="MeetingCost">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={`${siteUrl}${ogImage}`}>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "MeetingCost",
+    "url": "https://meetcost.co",
+    "description": "Free meeting cost calculator. See how much your meetings really cost in real time.",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  })} />
+
+  <style is:global>
+    :root {
+      --bg: #0a0a0f; --surface: #13131a; --surface-2: #1a1a24; --border: #2a2a3a;
+      --text: #e8e8f0; --text-dim: #8888a0; --accent: #00e88f;
+      --accent-glow: rgba(0,232,143,0.15); --red: #ff4466;
+      --red-glow: rgba(255,68,102,0.12); --orange: #ff9933;
+      --font-display: 'Outfit', sans-serif; --font-mono: 'DM Mono', monospace;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:var(--font-display);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .bg-gradient{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(0,232,143,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(255,68,102,.04) 0%,transparent 50%)}
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <slot />
+</body>
+</html>
