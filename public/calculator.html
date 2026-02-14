@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MeetingCost — How Much Is This Meeting Costing?</title>
+  <title>MeetCost — How Much Is This Meeting Costing?</title>
   <meta name="description" content="Real-time meeting cost calculator. See how much your meetings really cost as they happen. Free, no signup required.">
   <meta name="keywords" content="meeting cost calculator, meeting timer, meeting expense, how much meetings cost">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -136,7 +136,7 @@
   <div class="bg-gradient"></div>
   <div class="container">
     <header class="header">
-      <div class="logo"><div class="logo-dot"></div> MeetingCost</div>
+      <div class="logo"><div class="logo-dot"></div> MeetCost</div>
       <p class="tagline">See what your meetings really cost — in real time.</p>
     </header>
 
@@ -269,7 +269,7 @@
       </div>
     </div>
 
-    <footer class="footer"><p>MeetingCost — Free meeting cost calculator.<br>No tracking. No signup. Just math that hurts.</p></footer>
+    <footer class="footer"><p>MeetCost — Free meeting cost calculator.<br>No tracking. No signup. Just math that hurts.</p></footer>
   </div>
   <div class="toast" id="toast">Copied to clipboard!</div>
 
@@ -432,7 +432,7 @@ function startLive(){
   lStart=Date.now();lEl=0;lPT=0;lPaused=false;liveOn=true;
   document.getElementById('pauseBtn').textContent='⏸';
   lInt=setInterval(lTick,50);
-  document.title='⏱ MeetingCost — Running...';
+  document.title='⏱ MeetCost — Running...';
 }
 
 function lTick(){
@@ -450,12 +450,12 @@ function lTick(){
   const m=Math.floor((ts%3600)/60).toString().padStart(2,'0');
   const s=(ts%60).toString().padStart(2,'0');
   document.getElementById('elapsed').textContent=h+':'+m+':'+s;
-  document.title=S()+e+' — MeetingCost';
+  document.title=S()+e+' — MeetCost';
   markComps(document.getElementById('lComps'),c,lP);
 }
 
-function togglePause(){if(!liveOn)return;lPaused=!lPaused;if(lPaused){lPS=Date.now();document.getElementById('pauseBtn').textContent='▶';document.title='⏸ Paused — MeetingCost'}else{lPT+=Date.now()-lPS;document.getElementById('pauseBtn').textContent='⏸'}}
-function stopLive(){liveOn=false;lPaused=true;clearInterval(lInt);document.title='MeetingCost — Meeting ended'}
+function togglePause(){if(!liveOn)return;lPaused=!lPaused;if(lPaused){lPS=Date.now();document.getElementById('pauseBtn').textContent='▶';document.title='⏸ Paused — MeetCost'}else{lPT+=Date.now()-lPS;document.getElementById('pauseBtn').textContent='⏸'}}
+function stopLive(){liveOn=false;lPaused=true;clearInterval(lInt);document.title='MeetCost — Meeting ended'}
 
 function resetLive(){
   stopLive();
@@ -467,7 +467,7 @@ function resetLive(){
   document.getElementById('modeSwitcher').style.pointerEvents='auto';
   document.getElementById('curToggle').style.opacity='1';
   document.getElementById('curToggle').style.pointerEvents='auto';
-  document.title='MeetingCost — How Much Is This Meeting Costing?';
+  document.title='MeetCost — How Much Is This Meeting Costing?';
 }
 
 function shareLive(){

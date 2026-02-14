@@ -13,7 +13,7 @@ interface Props {
 const { title, description, date, readTime, canonical } = Astro.props;
 const formattedDate = new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
-<Base title={`${title} — MeetingCost`} description={description} canonical={canonical} type="article">
+<Base title={`${title} — MeetCost`} description={description} canonical={canonical} type="article">
   <Nav />
   <article class="article">
     <div class="article-header">
@@ -38,7 +38,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', { year: 'numeri
     "datePublished": date,
     "publisher": {
       "@type": "Organization",
-      "name": "MeetingCost",
+      "name": "MeetCost",
       "url": "https://meetcost.co"
     }
   })} />

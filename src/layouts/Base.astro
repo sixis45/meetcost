@@ -26,7 +26,7 @@ const fullCanonical = canonical ? `${siteUrl}${canonical}` : Astro.url.href;
   <meta property="og:description" content={description}>
   <meta property="og:url" content={fullCanonical}>
   <meta property="og:image" content={`${siteUrl}${ogImage}`}>
-  <meta property="og:site_name" content="MeetingCost">
+  <meta property="og:site_name" content="MeetCost">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
@@ -43,7 +43,7 @@ const fullCanonical = canonical ? `${siteUrl}${canonical}` : Astro.url.href;
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "MeetingCost",
+    "name": "MeetCost",
     "url": "https://meetcost.co",
     "description": "Free meeting cost calculator. See how much your meetings really cost in real time.",
     "applicationCategory": "BusinessApplication",
