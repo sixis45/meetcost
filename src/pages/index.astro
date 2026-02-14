@@ -89,10 +89,10 @@ import Nav from '../components/Nav.astro';
   .seo-content{position:relative;z-index:1;border-top:1px solid var(--border);margin-top:40px}
   .seo-inner{max-width:680px;margin:0 auto;padding:48px 24px 40px}
   .seo-collapse{border:none}
-  .seo-trigger{font-size:14px;color:var(--text-dim);cursor:pointer;text-align:center;display:block;padding:8px;transition:color .15s;list-style:none}
+  .seo-trigger{font-size:14px;font-weight:600;color:var(--accent);cursor:pointer;text-align:center;display:block;padding:12px 24px;transition:all .2s;list-style:none;border:1px solid var(--accent);border-radius:10px;max-width:320px;margin:0 auto;background:var(--accent-glow);letter-spacing:.5px}
   .seo-trigger::-webkit-details-marker{display:none}
-  .seo-trigger:hover{color:var(--accent)}
-  .seo-body{margin-top:32px}
+  .seo-trigger:hover{background:rgba(0,232,143,0.2);box-shadow:0 0 20px rgba(0,232,143,0.15)}
+  .seo-body{padding-top:32px}
   .seo-body h1{font-size:28px;font-weight:800;margin-bottom:20px;letter-spacing:-0.3px}
   .seo-body h2{font-size:21px;font-weight:700;margin:40px 0 12px}
   .seo-body p{font-size:16px;line-height:1.8;color:rgba(232,232,240,0.8);margin-bottom:16px}
