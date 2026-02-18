@@ -28,7 +28,7 @@
     .currency-toggle{display:flex;justify-content:center;margin-bottom:12px}
     .cur-btn{padding:6px 16px;border:1px solid var(--border);background:transparent;color:var(--text-dim);font-family:var(--font-mono);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
     .cur-btn:first-child{border-radius:8px 0 0 8px}
-    .cur-btn:last-child{border-radius:0 8px 8px 0;border-left:none}
+    .cur-btn:last-child{border-radius:0 8px 8px 0;margin-left:-1px}
     .cur-btn.active{background:var(--accent-glow);border-color:var(--accent);color:var(--accent)}
     .cur-btn:not(.active):hover{color:var(--text)}
     .mode-switcher{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:16px}
@@ -49,11 +49,8 @@
     .stepper-value{width:64px;text-align:center;font-family:var(--font-mono);font-size:22px;font-weight:500;color:var(--text);border:none;background:transparent;outline:none;-moz-appearance:textfield}
     .stepper-value::-webkit-inner-spin-button,.stepper-value::-webkit-outer-spin-button{-webkit-appearance:none}
     .input-suffix{font-size:14px;color:var(--text-dim);white-space:nowrap}
-    .rate-input-wrap{position:relative;display:flex;align-items:center}
-    .rate-currency{position:absolute;left:16px;font-family:var(--font-mono);font-size:18px;color:var(--text-dim);pointer-events:none}
-    .rate-input{width:130px;height:40px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:var(--font-mono);font-size:22px;font-weight:500;padding:0 16px 0 36px;outline:none;transition:border-color .2s;-moz-appearance:textfield}
-    .rate-input::-webkit-inner-spin-button,.rate-input::-webkit-outer-spin-button{-webkit-appearance:none}
-    .rate-input:focus{border-color:var(--accent)}
+    .rate-currency{font-family:var(--font-mono);font-size:16px;color:var(--text-dim);padding-left:4px}
+    .rate-val{padding-left:0;width:72px}
     .duration-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     .dur-chip{padding:10px 16px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text-dim);font-family:var(--font-mono);font-size:14px;cursor:pointer;transition:all .15s}
     .dur-chip:hover{border-color:var(--accent);color:var(--accent)}
@@ -152,7 +149,7 @@
       <div class="input-group">
         <label class="input-label">Average hourly rate</label>
         <div class="input-row">
-          <div class="rate-input-wrap"><span class="rate-currency" id="qCurSymbol">€</span><input type="number" class="rate-input" id="qRate" value="35" min="1" max="1000" step="5"></div>
+          <div class="stepper"><button class="stepper-btn" onclick="adjRate('qRate',-5)">−</button><span class="rate-currency">€</span><input type="number" class="stepper-value rate-val" id="qRate" value="35" min="1" max="1000" step="5"><button class="stepper-btn" onclick="adjRate('qRate',5)">+</button></div>
           <span class="input-suffix">/ hour per person</span>
         </div>
       </div>
@@ -210,7 +207,7 @@
       <div class="input-group">
         <label class="input-label">Average hourly rate</label>
         <div class="input-row">
-          <div class="rate-input-wrap"><span class="rate-currency" id="lCurSymbol">€</span><input type="number" class="rate-input" id="lRate" value="35" min="1" max="1000" step="5"></div>
+          <div class="stepper"><button class="stepper-btn" onclick="adjRate('lRate',-5)">−</button><span class="rate-currency">€</span><input type="number" class="stepper-value rate-val" id="lRate" value="35" min="1" max="1000" step="5"><button class="stepper-btn" onclick="adjRate('lRate',5)">+</button></div>
           <span class="input-suffix">/ hour per person</span>
         </div>
       </div>
@@ -264,6 +261,7 @@
     var curMode="quick";
     function switchMode(m){if(m==="live"&&liveOn)return;curMode=m;document.querySelectorAll(".mode-btn").forEach(function(b){b.classList.toggle("active",b.dataset.mode===m)});document.getElementById("quickSetup").classList.toggle("hidden",m!=="quick");document.getElementById("quickResult").classList.remove("active");document.getElementById("liveSetup").classList.toggle("hidden",m!=="live");document.getElementById("timerSection").classList.remove("active")}
     function adj(id,d){var e=document.getElementById(id);var v=parseInt(e.value)+d;if(v<1)v=1;if(v>100)v=100;e.value=v}
+    function adjRate(id,d){var e=document.getElementById(id);var v=parseInt(e.value)+d;if(v<1)v=1;if(v>1000)v=1000;e.value=v}
     function toast(msg){var t=document.getElementById("toast");t.textContent=msg||"Copied to clipboard!";t.classList.add("show");setTimeout(function(){t.classList.remove("show")},2500)}
     var qD={p:5,r:35,d:30,cost:0};
     function setDur(m){document.getElementById("qDur").value=m;document.querySelectorAll(".dur-chip").forEach(function(c){c.classList.toggle("active",parseInt(c.dataset.min)===m)})}
