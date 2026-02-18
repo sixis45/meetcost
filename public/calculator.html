@@ -12,11 +12,19 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0a0f; --surface: #13131a; --surface-2: #1a1a24; --border: #2a2a3a;
-      --text: #e8e8f0; --text-dim: #8888a0; --accent: #00e88f;
-      --accent-glow: rgba(0,232,143,0.15); --red: #ff4466;
-      --red-glow: rgba(255,68,102,0.12); --orange: #ff9933;
-      --font-display: 'Outfit', sans-serif; --font-mono: 'DM Mono', monospace;
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface-2: #1a1a24;
+      --border: #2a2a3a;
+      --text: #e8e8f0;
+      --text-dim: #8888a0;
+      --accent: #00e88f;
+      --accent-glow: rgba(0,232,143,0.15);
+      --red: #ff4466;
+      --red-glow: rgba(255,68,102,0.12);
+      --orange: #ff9933;
+      --font-display: 'Outfit', sans-serif;
+      --font-mono: 'DM Mono', monospace;
     }
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:var(--font-display);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
@@ -74,6 +82,9 @@
     .preset-chips{display:flex;flex-wrap:wrap;gap:8px}
     .preset-chip{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-dim);font-family:var(--font-display);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
     .preset-chip:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+    /* FIX 2: preset highlight when active */
+    .preset-chip.active{border-color:var(--accent);background:var(--accent-glow);color:var(--accent)}
+
     .primary-btn{width:100%;height:56px;border:none;border-radius:14px;background:var(--accent);color:var(--bg);font-family:var(--font-display);font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
     .primary-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(0,232,143,.3)}
     .primary-btn:active{transform:translateY(0)}
@@ -180,10 +191,10 @@
       <div class="presets">
         <div class="presets-label">Quick presets</div>
         <div class="preset-chips">
-          <button class="preset-chip" onclick="qPreset(3,25,15)">Standup · 3p · 15m</button>
-          <button class="preset-chip" onclick="qPreset(6,40,30)">Team sync · 6p · 30m</button>
-          <button class="preset-chip" onclick="qPreset(10,50,60)">All-hands · 10p · 1hr</button>
-          <button class="preset-chip" onclick="qPreset(4,70,45)">Leadership · 4p · 45m</button>
+          <button class="preset-chip" onclick="qPreset(3,25,15,this)">Standup · 3p · 15m</button>
+          <button class="preset-chip" onclick="qPreset(6,40,30,this)">Team sync · 6p · 30m</button>
+          <button class="preset-chip" onclick="qPreset(10,50,60,this)">All-hands · 10p · 1hr</button>
+          <button class="preset-chip" onclick="qPreset(4,70,45,this)">Leadership · 4p · 45m</button>
         </div>
       </div>
       <div style="margin-top:28px"><button class="primary-btn" onclick="calcQuick()">Calculate Cost</button></div>
@@ -232,10 +243,10 @@
       <div class="presets">
         <div class="presets-label">Quick presets</div>
         <div class="preset-chips">
-          <button class="preset-chip" onclick="lPreset(3,25)">Standup · 3 people</button>
-          <button class="preset-chip" onclick="lPreset(6,40)">Team sync · 6 people</button>
-          <button class="preset-chip" onclick="lPreset(10,50)">All-hands · 10 people</button>
-          <button class="preset-chip" onclick="lPreset(4,70)">Leadership · 4 people</button>
+          <button class="preset-chip" onclick="lPreset(3,25,this)">Standup · 3 people</button>
+          <button class="preset-chip" onclick="lPreset(6,40,this)">Team sync · 6 people</button>
+          <button class="preset-chip" onclick="lPreset(10,50,this)">All-hands · 10 people</button>
+          <button class="preset-chip" onclick="lPreset(4,70,this)">Leadership · 4 people</button>
         </div>
       </div>
       <div style="margin-top:28px"><button class="primary-btn" onclick="startLive()">Start Meeting Timer</button></div>
@@ -266,202 +277,228 @@
         <button class="action-btn reset" onclick="resetLive()">↩ New Meeting</button>
       </div>
     </div>
-
   </div>
+
   <div class="toast" id="toast">Copied to clipboard!</div>
 
-<script>
-// === CURRENCY ===
-const currencies = {
-  EUR: { sym: '€', code: 'EUR', comparisons: [
-    {emoji:'☕',label:'Coffee for the team',base:3,perPerson:true},
-    {emoji:'🍕',label:'Pizza for everyone',base:8,perPerson:true},
-    {emoji:'🎧',label:'Spotify for a year',cost:50},
-    {emoji:'🍽️',label:'Nice dinner for two',cost:120},
-    {emoji:'✈️',label:'Flight to Barcelona',cost:300},
-    {emoji:'💻',label:'New monitor',cost:500},
-    {emoji:'🏖️',label:'Weekend getaway',cost:1000},
-    {emoji:'🔥',label:'Month of ads budget',cost:2000}
-  ]},
-  USD: { sym: '$', code: 'USD', comparisons: [
-    {emoji:'☕',label:'Coffee for the team',base:4,perPerson:true},
-    {emoji:'🍕',label:'Pizza for everyone',base:10,perPerson:true},
-    {emoji:'🎧',label:'Spotify for a year',cost:60},
-    {emoji:'🍽️',label:'Nice dinner for two',cost:150},
-    {emoji:'✈️',label:'Flight to New York',cost:350},
-    {emoji:'💻',label:'New monitor',cost:550},
-    {emoji:'🏖️',label:'Weekend getaway',cost:1200},
-    {emoji:'🔥',label:'Month of ads budget',cost:2500}
-  ]}
-};
+  <script>
+    // === CURRENCY ===
+    const currencies = {
+      EUR: { sym: '€', code: 'EUR', comparisons: [
+        {emoji:'☕',label:'Coffee for the team',base:3,perPerson:true},
+        {emoji:'🍕',label:'Pizza for everyone',base:8,perPerson:true},
+        {emoji:'🎧',label:'Spotify for a year',cost:50},
+        {emoji:'🍽️',label:'Nice dinner for two',cost:120},
+        {emoji:'✈️',label:'Flight to Barcelona',cost:300},
+        {emoji:'💻',label:'New monitor',cost:500},
+        {emoji:'🏖️',label:'Weekend getaway',cost:1000},
+        {emoji:'🔥',label:'Month of ads budget',cost:2000}
+      ]},
+      USD: { sym: '$', code: 'USD', comparisons: [
+        {emoji:'☕',label:'Coffee for the team',base:4,perPerson:true},
+        {emoji:'🍕',label:'Pizza for everyone',base:10,perPerson:true},
+        {emoji:'🎧',label:'Spotify for a year',cost:60},
+        {emoji:'🍽️',label:'Nice dinner for two',cost:150},
+        {emoji:'✈️',label:'Flight to New York',cost:350},
+        {emoji:'💻',label:'New monitor',cost:550},
+        {emoji:'🏖️',label:'Weekend getaway',cost:1200},
+        {emoji:'🔥',label:'Month of ads budget',cost:2500}
+      ]}
+    };
+    let cur = 'EUR';
+    function S(){ return currencies[cur].sym; }
 
-let cur = 'EUR';
-function S(){ return currencies[cur].sym; }
-
-function setCur(c){
-  cur=c;
-  document.querySelectorAll('.cur-btn').forEach(b=>b.classList.toggle('active',b.dataset.cur===c));
-  // Update currency symbols in inputs
-  document.querySelectorAll('.rate-currency').forEach(el=>el.textContent=S());
-  // Rebuild comparison cards
-  buildComps('qComps');
-  buildComps('lComps');
-}
-
-function buildComps(containerId){
-  const container=document.getElementById(containerId);
-  const comps=currencies[cur].comparisons;
-  container.innerHTML='';
-  comps.forEach(c=>{
-    const div=document.createElement('div');
-    div.className='comp-card';
-    div.dataset.base=c.base||'';
-    div.dataset.cost=c.cost||'';
-    div.dataset.perPerson=c.perPerson?'1':'0';
-    div.innerHTML=`<div class="comp-emoji">${c.emoji}</div><div class="comp-label">${c.label}</div><div class="comp-value">${S()}${c.cost||c.base}</div>`;
-    container.appendChild(div);
-  });
-}
-
-function markComps(container,cost,people){
-  const cards=container.querySelectorAll('.comp-card');
-  cards.forEach(card=>{
-    let threshold;
-    if(card.dataset.perPerson==='1'){
-      threshold=parseFloat(card.dataset.base)*people;
-      card.querySelector('.comp-value').textContent=S()+threshold;
-    } else {
-      threshold=parseFloat(card.dataset.cost);
+    // FIX 1: setCur now updates result displays when switching currency
+    function setCur(c){
+      cur=c;
+      document.querySelectorAll('.cur-btn').forEach(b=>b.classList.toggle('active',b.dataset.cur===c));
+      document.querySelectorAll('.rate-currency').forEach(el=>el.textContent=S());
+      buildComps('qComps');
+      buildComps('lComps');
+      // Update displayed results if they're visible
+      if(qD.cost>0 && document.getElementById('quickResult').classList.contains('active')){
+        var s = qD.cost>=1000 ? S()+qD.cost.toLocaleString('en',{maximumFractionDigits:0}) : S()+qD.cost.toFixed(2);
+        document.getElementById('qCost').textContent = s;
+        document.getElementById('qSummary').innerHTML = '<strong>'+qD.p+' people</strong> × <strong>'+S()+qD.r+'/hr</strong> × <strong>'+qD.d+' min</strong>';
+        document.getElementById('qPerMin').textContent = S()+(qD.p*qD.r/60).toFixed(2);
+        document.getElementById('qPerPerson').textContent = S()+(qD.cost/qD.p).toFixed(2);
+        updateYearly();
+        markComps(document.getElementById('qComps'), qD.cost, qD.p);
+      }
     }
-    card.classList.toggle('reached',cost>=threshold);
-  });
-}
 
-// Init comparison cards
-buildComps('qComps');
-buildComps('lComps');
+    function buildComps(containerId){
+      const container=document.getElementById(containerId);
+      const comps=currencies[cur].comparisons;
+      container.innerHTML='';
+      comps.forEach(c=>{
+        const div=document.createElement('div');
+        div.className='comp-card';
+        div.dataset.base=c.base||'';
+        div.dataset.cost=c.cost||'';
+        div.dataset.perPerson=c.perPerson?'1':'0';
+        div.innerHTML=`<div class="comp-emoji">${c.emoji}</div><div class="comp-label">${c.label}</div><div class="comp-value">${S()}${c.cost||c.base}</div>`;
+        container.appendChild(div);
+      });
+    }
+    function markComps(container,cost,people){
+      const cards=container.querySelectorAll('.comp-card');
+      cards.forEach(card=>{
+        let threshold;
+        if(card.dataset.perPerson==='1'){
+          threshold=parseFloat(card.dataset.base)*people;
+          card.querySelector('.comp-value').textContent=S()+threshold;
+        } else {
+          threshold=parseFloat(card.dataset.cost);
+        }
+        card.classList.toggle('reached',cost>=threshold);
+      });
+    }
+    // Init comparison cards
+    buildComps('qComps');
+    buildComps('lComps');
 
-// === MODE ===
-let curMode='quick';
-function switchMode(m){if(m==='quick'&&liveOn)return;curMode=m;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));document.getElementById('quickSetup').classList.toggle('hidden',m!=='quick');document.getElementById('quickResult').classList.remove('active');document.getElementById('liveSetup').classList.toggle('hidden',m!=='live');document.getElementById('timerSection').classList.remove('active')}
+    // === MODE ===
+    let curMode='quick';
+    function switchMode(m){if(m==='quick'&&liveOn)return;curMode=m;document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));document.getElementById('quickSetup').classList.toggle('hidden',m!=='quick');document.getElementById('quickResult').classList.remove('active');document.getElementById('liveSetup').classList.toggle('hidden',m!=='live');document.getElementById('timerSection').classList.remove('active')}
 
-// === SHARED ===
-function adj(id,d){const e=document.getElementById(id);let v=parseInt(e.value)+d;if(v<1)v=1;if(v>100)v=100;e.value=v}
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg||'Copied to clipboard!';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+    // === SHARED ===
+    function adj(id,d){const e=document.getElementById(id);let v=parseInt(e.value)+d;if(v<1)v=1;if(v>100)v=100;e.value=v}
+    function toast(msg){const t=document.getElementById('toast');t.textContent=msg||'Copied to clipboard!';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
-// === QUICK CALC ===
-let qD={p:5,r:35,d:30,cost:0};
-function setDur(m){document.getElementById('qDur').value=m;document.querySelectorAll('.dur-chip').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.min)===m))}
-document.getElementById('qDur').addEventListener('input',function(){const v=parseInt(this.value);document.querySelectorAll('.dur-chip').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.min)===v))});
-function qPreset(p,r,d){document.getElementById('qPeople').value=p;document.getElementById('qRate').value=r;setDur(d)}
+    // === QUICK CALC ===
+    let qD={p:5,r:35,d:30,cost:0};
 
-function calcQuick(){
-  qD.p=parseInt(document.getElementById('qPeople').value)||5;
-  qD.r=parseFloat(document.getElementById('qRate').value)||35;
-  qD.d=parseInt(document.getElementById('qDur').value)||30;
-  qD.cost=(qD.p*qD.r*qD.d)/60;
-  const c=qD.cost;
-  const s=c>=1000?S()+c.toLocaleString('en',{maximumFractionDigits:0}):S()+c.toFixed(2);
-  const el=document.getElementById('qCost');
-  el.textContent=s;
-  el.classList.remove('burning','warming');
-  if(c>500)el.classList.add('burning');else if(c>200)el.classList.add('warming');
-  document.getElementById('qSummary').innerHTML='<strong>'+qD.p+' people</strong> × <strong>'+S()+qD.r+'/hr</strong> × <strong>'+qD.d+' min</strong>';
-  document.getElementById('qPerMin').textContent=S()+(qD.p*qD.r/60).toFixed(2);
-  document.getElementById('qPerPerson').textContent=S()+(c/qD.p).toFixed(2);
-  updateYearly();
-  markComps(document.getElementById('qComps'),c,qD.p);
-  document.getElementById('quickSetup').classList.add('hidden');
-  document.getElementById('quickResult').classList.add('active');
-}
+    function setDur(m){document.getElementById('qDur').value=m;document.querySelectorAll('.dur-chip').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.min)===m))}
+    document.getElementById('qDur').addEventListener('input',function(){const v=parseInt(this.value);document.querySelectorAll('.dur-chip').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.min)===v))});
 
-function updateYearly(){
-  const f=parseInt(document.getElementById('qFreq').value);
-  const y=qD.cost*f*48;
-  document.getElementById('qYearly').textContent=y>=1000?S()+Math.round(y).toLocaleString('en'):S()+y.toFixed(0);
-  let ctx='';
-  if(y>100000)ctx="That's a <strong>full senior salary</strong> spent in meetings.";
-  else if(y>50000)ctx="That's a <strong>junior developer's salary</strong> in meetings.";
-  else if(y>20000)ctx="That's a <strong>nice car</strong> worth of meetings per year.";
-  else if(y>10000)ctx="That's <strong>"+Math.round(y/300)+" flights</strong> worth of meetings.";
-  else if(y>5000)ctx="That's <strong>"+Math.round(y/120)+" nice dinners</strong> for two.";
-  else ctx="That's <strong>"+Math.round(y/3)+" coffees</strong>.";
-  document.getElementById('qYearlyCtx').innerHTML=ctx;
-}
+    // FIX 2: qPreset and lPreset now highlight active chip
+    function qPreset(p,r,d,el){
+      document.getElementById('qPeople').value=p;
+      document.getElementById('qRate').value=r;
+      setDur(d);
+      document.querySelectorAll('#quickSetup .preset-chip').forEach(c=>c.classList.remove('active'));
+      if(el) el.classList.add('active');
+    }
 
-function resetQuick(){document.getElementById('quickSetup').classList.remove('hidden');document.getElementById('quickResult').classList.remove('active');document.querySelectorAll('#qComps .comp-card').forEach(c=>c.classList.remove('reached'))}
+    function calcQuick(){
+      qD.p=parseInt(document.getElementById('qPeople').value)||5;
+      qD.r=parseFloat(document.getElementById('qRate').value)||35;
+      qD.d=parseInt(document.getElementById('qDur').value)||30;
+      qD.cost=(qD.p*qD.r*qD.d)/60;
+      const c=qD.cost;
+      const s=c>=1000?S()+c.toLocaleString('en',{maximumFractionDigits:0}):S()+c.toFixed(2);
+      const el=document.getElementById('qCost');
+      el.textContent=s;
+      el.classList.remove('burning','warming');
+      if(c>500)el.classList.add('burning');else if(c>200)el.classList.add('warming');
+      document.getElementById('qSummary').innerHTML='<strong>'+qD.p+' people</strong> × <strong>'+S()+qD.r+'/hr</strong> × <strong>'+qD.d+' min</strong>';
+      document.getElementById('qPerMin').textContent=S()+(qD.p*qD.r/60).toFixed(2);
+      document.getElementById('qPerPerson').textContent=S()+(c/qD.p).toFixed(2);
+      updateYearly();
+      markComps(document.getElementById('qComps'),c,qD.p);
+      document.getElementById('quickSetup').classList.add('hidden');
+      document.getElementById('quickResult').classList.add('active');
+    }
 
-function shareQuick(){
-  const f=document.getElementById('qFreq');const ft=f.options[f.selectedIndex].text;const y=qD.cost*parseInt(f.value)*48;
-  const t=`⚡ Meeting Cost Report\n━━━━━━━━━━━━━━━━━\n👥 ${qD.p} people × ${S()}${qD.r}/hr\n⏰ Duration: ${qD.d} minutes\n💸 Total cost: ${S()}${qD.cost.toFixed(2)}\n📊 Per minute: ${S()}${(qD.p*qD.r/60).toFixed(2)}\n\n🗓 If this happens ${ft}:\n💰 ${S()}${Math.round(y).toLocaleString('en')} per year\n\nCould this meeting have been an email? 🤔\n— meetcost.co`;
-  navigator.clipboard.writeText(t).then(()=>toast());
-}
+    function updateYearly(){
+      const f=parseInt(document.getElementById('qFreq').value);
+      const y=qD.cost*f*48;
+      document.getElementById('qYearly').textContent=y>=1000?S()+Math.round(y).toLocaleString('en'):S()+y.toFixed(0);
+      let ctx='';
+      if(y>100000)ctx="That's a <strong>full senior salary</strong> spent in meetings.";
+      else if(y>50000)ctx="That's a <strong>junior developer's salary</strong> in meetings.";
+      else if(y>20000)ctx="That's a <strong>nice car</strong> worth of meetings per year.";
+      else if(y>10000)ctx="That's <strong>"+Math.round(y/300)+" flights</strong> worth of meetings.";
+      else if(y>5000)ctx="That's <strong>"+Math.round(y/120)+" nice dinners</strong> for two.";
+      else ctx="That's <strong>"+Math.round(y/3)+" coffees</strong>.";
+      document.getElementById('qYearlyCtx').innerHTML=ctx;
+    }
 
-// === LIVE TIMER ===
-let lInt=null,lStart=null,lEl=0,lPT=0,lPaused=false,liveOn=false,lP=5,lR=35,lCPS=0,lPS=0;
-function lPreset(p,r){document.getElementById('lPeople').value=p;document.getElementById('lRate').value=r}
+    function resetQuick(){
+      document.getElementById('quickSetup').classList.remove('hidden');
+      document.getElementById('quickResult').classList.remove('active');
+      document.querySelectorAll('#qComps .comp-card').forEach(c=>c.classList.remove('reached'));
+      document.querySelectorAll('#quickSetup .preset-chip').forEach(c=>c.classList.remove('active'));
+    }
 
-function startLive(){
-  lP=parseInt(document.getElementById('lPeople').value)||5;
-  lR=parseFloat(document.getElementById('lRate').value)||35;
-  lCPS=(lP*lR)/3600;
-  const pm=(lP*lR/60).toFixed(2);
-  document.getElementById('liveSetup').classList.add('hidden');
-  document.getElementById('timerSection').classList.add('active');
-  document.getElementById('modeSwitcher').style.opacity='.3';
-  document.getElementById('modeSwitcher').style.pointerEvents='none';
-  document.getElementById('curToggle').style.opacity='.3';
-  document.getElementById('curToggle').style.pointerEvents='none';
-  document.getElementById('sLP').textContent=lP;
-  document.getElementById('sLR').textContent=S()+lR+'/hr';
-  document.getElementById('sLB').textContent=S()+pm;
-  document.getElementById('livePerMin').textContent=S()+pm+' / minute';
-  lStart=Date.now();lEl=0;lPT=0;lPaused=false;liveOn=true;
-  document.getElementById('pauseBtn').textContent='⏸';
-  lInt=setInterval(lTick,50);
-  document.title='⏱ MeetCost — Running...';
-}
+    function shareQuick(){
+      const f=document.getElementById('qFreq');const ft=f.options[f.selectedIndex].text;const y=qD.cost*parseInt(f.value)*48;
+      const t=`⚡ Meeting Cost Report\n━━━━━━━━━━━━━━━━━\n👥 ${qD.p} people × ${S()}${qD.r}/hr\n⏰ Duration: ${qD.d} minutes\n💸 Total cost: ${S()}${qD.cost.toFixed(2)}\n📊 Per minute: ${S()}${(qD.p*qD.r/60).toFixed(2)}\n\n🗓 If this happens ${ft}:\n💰 ${S()}${Math.round(y).toLocaleString('en')} per year\n\nCould this meeting have been an email? 🤔\n— meetcost.co`;
+      navigator.clipboard.writeText(t).then(()=>toast());
+    }
 
-function lTick(){
-  if(lPaused)return;
-  lEl=(Date.now()-lStart-lPT)/1000;
-  const c=lEl*lCPS;
-  const e=Math.floor(c);
-  const cn=Math.floor((c-e)*100).toString().padStart(2,'0');
-  document.getElementById('liveCost').innerHTML=S()+e.toLocaleString()+'<span class="cost-cents">.'+cn+'</span>';
-  const el=document.getElementById('liveCost');
-  el.classList.remove('burning','warming');
-  if(c>500)el.classList.add('burning');else if(c>200)el.classList.add('warming');
-  const ts=Math.floor(lEl);
-  const h=Math.floor(ts/3600).toString().padStart(2,'0');
-  const m=Math.floor((ts%3600)/60).toString().padStart(2,'0');
-  const s=(ts%60).toString().padStart(2,'0');
-  document.getElementById('elapsed').textContent=h+':'+m+':'+s;
-  document.title=S()+e+' — MeetCost';
-  markComps(document.getElementById('lComps'),c,lP);
-}
+    // === LIVE TIMER ===
+    let lInt=null,lStart=null,lEl=0,lPT=0,lPaused=false,liveOn=false,lP=5,lR=35,lCPS=0,lPS=0;
 
-function togglePause(){if(!liveOn)return;lPaused=!lPaused;if(lPaused){lPS=Date.now();document.getElementById('pauseBtn').textContent='▶';document.title='⏸ Paused — MeetCost'}else{lPT+=Date.now()-lPS;document.getElementById('pauseBtn').textContent='⏸'}}
-function stopLive(){liveOn=false;lPaused=true;clearInterval(lInt);document.title='MeetCost — Meeting ended'}
+    // FIX 2: lPreset highlights active chip
+    function lPreset(p,r,el){
+      document.getElementById('lPeople').value=p;
+      document.getElementById('lRate').value=r;
+      document.querySelectorAll('#liveSetup .preset-chip').forEach(c=>c.classList.remove('active'));
+      if(el) el.classList.add('active');
+    }
 
-function resetLive(){
-  stopLive();
-  document.getElementById('liveSetup').classList.remove('hidden');
-  document.getElementById('timerSection').classList.remove('active');
-  document.getElementById('liveCost').classList.remove('burning','warming');
-  document.querySelectorAll('#lComps .comp-card').forEach(c=>c.classList.remove('reached'));
-  document.getElementById('modeSwitcher').style.opacity='1';
-  document.getElementById('modeSwitcher').style.pointerEvents='auto';
-  document.getElementById('curToggle').style.opacity='1';
-  document.getElementById('curToggle').style.pointerEvents='auto';
-  document.title='MeetCost — How Much Is This Meeting Costing?';
-}
+    function startLive(){
+      lP=parseInt(document.getElementById('lPeople').value)||5;
+      lR=parseFloat(document.getElementById('lRate').value)||35;
+      lCPS=(lP*lR)/3600;
+      const pm=(lP*lR/60).toFixed(2);
+      document.getElementById('liveSetup').classList.add('hidden');
+      document.getElementById('timerSection').classList.add('active');
+      document.getElementById('modeSwitcher').style.opacity='.3';
+      document.getElementById('modeSwitcher').style.pointerEvents='none';
+      document.getElementById('curToggle').style.opacity='.3';
+      document.getElementById('curToggle').style.pointerEvents='none';
+      document.getElementById('sLP').textContent=lP;
+      document.getElementById('sLR').textContent=S()+lR+'/hr';
+      document.getElementById('sLB').textContent=S()+pm;
+      document.getElementById('livePerMin').textContent=S()+pm+' / minute';
+      lStart=Date.now();lEl=0;lPT=0;lPaused=false;liveOn=true;
+      document.getElementById('pauseBtn').textContent='⏸';
+      lInt=setInterval(lTick,50);
+      document.title='⏱ MeetCost — Running...';
+    }
 
-function shareLive(){
-  const mins=Math.floor(lEl/60);const c=(lEl*lCPS).toFixed(2);
-  const t=`⏱ Meeting Cost Report\n━━━━━━━━━━━━━━━━━\n👥 ${lP} people × ${S()}${lR}/hr\n⏰ Duration: ${mins} minutes\n💸 Total cost: ${S()}${c}\n📊 Burn rate: ${S()}${(lP*lR/60).toFixed(2)}/min\n\nCould this meeting have been an email? 🤔\n— meetcost.co`;
-  navigator.clipboard.writeText(t).then(()=>toast());
-}
-</script>
+    function lTick(){
+      if(lPaused)return;
+      lEl=(Date.now()-lStart-lPT)/1000;
+      const c=lEl*lCPS;
+      const e=Math.floor(c);
+      const cn=Math.floor((c-e)*100).toString().padStart(2,'0');
+      document.getElementById('liveCost').innerHTML=S()+e.toLocaleString()+'<span class="cost-cents">.'+cn+'</span>';
+      const el=document.getElementById('liveCost');
+      el.classList.remove('burning','warming');
+      if(c>500)el.classList.add('burning');else if(c>200)el.classList.add('warming');
+      const ts=Math.floor(lEl);
+      const h=Math.floor(ts/3600).toString().padStart(2,'0');
+      const m=Math.floor((ts%3600)/60).toString().padStart(2,'0');
+      const s=(ts%60).toString().padStart(2,'0');
+      document.getElementById('elapsed').textContent=h+':'+m+':'+s;
+      document.title=S()+e+' — MeetCost';
+      markComps(document.getElementById('lComps'),c,lP);
+    }
+
+    function togglePause(){if(!liveOn)return;lPaused=!lPaused;if(lPaused){lPS=Date.now();document.getElementById('pauseBtn').textContent='▶';document.title='⏸ Paused — MeetCost'}else{lPT+=Date.now()-lPS;document.getElementById('pauseBtn').textContent='⏸'}}
+    function stopLive(){liveOn=false;lPaused=true;clearInterval(lInt);document.title='MeetCost — Meeting ended'}
+    function resetLive(){
+      stopLive();
+      document.getElementById('liveSetup').classList.remove('hidden');
+      document.getElementById('timerSection').classList.remove('active');
+      document.getElementById('liveCost').classList.remove('burning','warming');
+      document.querySelectorAll('#lComps .comp-card').forEach(c=>c.classList.remove('reached'));
+      document.getElementById('modeSwitcher').style.opacity='1';
+      document.getElementById('modeSwitcher').style.pointerEvents='auto';
+      document.getElementById('curToggle').style.opacity='1';
+      document.getElementById('curToggle').style.pointerEvents='auto';
+      document.title='MeetCost — How Much Is This Meeting Costing?';
+      document.querySelectorAll('#liveSetup .preset-chip').forEach(c=>c.classList.remove('active'));
+    }
+    function shareLive(){
+      const mins=Math.floor(lEl/60);const c=(lEl*lCPS).toFixed(2);
+      const t=`⏱ Meeting Cost Report\n━━━━━━━━━━━━━━━━━\n👥 ${lP} people × ${S()}${lR}/hr\n⏰ Duration: ${mins} minutes\n💸 Total cost: ${S()}${c}\n📊 Burn rate: ${S()}${(lP*lR/60).toFixed(2)}/min\n\nCould this meeting have been an email? 🤔\n— meetcost.co`;
+      navigator.clipboard.writeText(t).then(()=>toast());
+    }
+  </script>
 </body>
 </html>

@@ -2,85 +2,85 @@
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 ---
+
 <Base
   title="MeetCost — Free Meeting Cost Calculator | See What Meetings Really Cost"
   description="Calculate the real cost of your meetings in seconds. Free meeting cost calculator with live timer, yearly projections, and shareable reports. EUR and USD supported."
   canonical="/"
 >
-  <Nav />
+<Nav />
 
-  <div class="calc-wrapper">
-    <iframe src="/calculator.html" title="Meeting Cost Calculator" class="calc-frame" id="calcFrame"></iframe>
-  </div>
+<div class="calc-wrapper">
+  <iframe src="/calculator.html" title="Meeting Cost Calculator" class="calc-frame" id="calcFrame"></iframe>
+</div>
 
-  <section class="seo-content">
-    <div class="seo-inner">
-      <details class="seo-collapse">
-        <summary class="seo-trigger">Learn more about meeting costs ↓</summary>
-        <div class="seo-body">
-          <h1>Meeting Cost Calculator — See What Your Meetings Really Cost</h1>
-          <p>
-            Meetings are the biggest hidden expense in every company. The average employee spends
-            <strong>31 hours per month</strong> in unproductive meetings, and most teams have no idea
-            what that costs. MeetCost makes it visible — instantly.
-          </p>
+<section class="seo-content">
+  <div class="seo-inner">
+    <details class="seo-collapse" id="seoDetails">
+      <summary class="seo-trigger">Learn more about meeting costs ↓</summary>
+      <div class="seo-body">
+        <h1>Meeting Cost Calculator — See What Your Meetings Really Cost</h1>
+        <p>
+          Meetings are the biggest hidden expense in every company. The average employee spends
+          <strong>31 hours per month</strong> in unproductive meetings, and most teams have no idea
+          what that costs. MeetCost makes it visible — instantly.
+        </p>
 
-          <h2>How Much Does a Meeting Cost?</h2>
-          <p>
-            A meeting's true cost is simple math most people never do: <strong>number of people × average hourly rate × duration</strong>.
-            A 1-hour meeting with 8 people at $50/hour costs $400. If that meeting happens weekly, it's
-            $19,200 per year — the cost of a part-time employee, spent sitting in a conference room.
-          </p>
+        <h2>How Much Does a Meeting Cost?</h2>
+        <p>
+          A meeting's true cost is simple math most people never do: <strong>number of people × average hourly rate × duration</strong>.
+          A 1-hour meeting with 8 people at $50/hour costs $400. If that meeting happens weekly, it's
+          $19,200 per year — the cost of a part-time employee, spent sitting in a conference room.
+        </p>
 
-          <h2>How the Meeting Cost Calculator Works</h2>
-          <p>
-            Choose <strong>Quick Calculate</strong> to instantly see the cost of any meeting — enter the number of
-            attendees, average hourly rate, and meeting duration. You'll get the total cost, per-minute burn rate,
-            per-person cost, and a yearly projection showing what recurring meetings cost over 48 working weeks.
-          </p>
-          <p>
-            Use <strong>Live Timer</strong> during an actual meeting. Watch the cost tick up in real time, with
-            comparison milestones that put the cost in perspective. Copy and share the meeting cost report
-            with your team afterward.
-          </p>
+        <h2>How the Meeting Cost Calculator Works</h2>
+        <p>
+          Choose <strong>Quick Calculate</strong> to instantly see the cost of any meeting — enter the number of attendees,
+          average hourly rate, and meeting duration. You'll get the total cost, per-minute burn rate, per-person cost,
+          and a yearly projection showing what recurring meetings cost over 48 working weeks.
+        </p>
+        <p>
+          Use <strong>Live Timer</strong> during an actual meeting. Watch the cost tick up in real time, with comparison
+          milestones that put the cost in perspective. Copy and share the meeting cost report with your team afterward.
+        </p>
 
-          <h2>Why Track Meeting Costs?</h2>
-          <p>
-            Companies that start tracking meeting costs typically reduce unnecessary meetings by 20-30%.
-            When the cost is visible, people ask better questions: Does this need a meeting?
-            Does everyone need to attend? Can this be 15 minutes instead of an hour?
-          </p>
+        <h2>Why Track Meeting Costs?</h2>
+        <p>
+          Companies that start tracking meeting costs typically reduce unnecessary meetings by 20-30%.
+          When the cost is visible, people ask better questions: Does this need a meeting?
+          Does everyone need to attend? Can this be 15 minutes instead of an hour?
+        </p>
 
-          <h2>Meeting Cost by Company Size</h2>
-          <p>
-            For a <strong>10-person startup</strong> with an average salary of $60,000/year (~$30/hour), a daily
-            30-minute standup with the whole team costs around <strong>$36,000 per year</strong>.
-            For a <strong>500-person company</strong> at $80,000 average (~$40/hour), if 20% of
-            employees attend one unnecessary 1-hour meeting per week, that's over
-            <strong>$1.9 million per year</strong> wasted.
-          </p>
+        <h2>Meeting Cost by Company Size</h2>
+        <p>
+          For a <strong>10-person startup</strong> with an average salary of $60,000/year (~$30/hour), a daily
+          30-minute standup with the whole team costs around <strong>$36,000 per year</strong>. For a
+          <strong>500-person company</strong> at $80,000 average (~$40/hour), if 20% of
+          employees attend one unnecessary 1-hour meeting per week, that's over
+          <strong>$1.9 million per year</strong> wasted.
+        </p>
 
-          <h2>Free, Private, No Signup</h2>
-          <p>
-            MeetCost supports EUR and USD. Quick Calculator gives instant results with yearly
-            projections. Live Timer runs during meetings with a real-time cost counter. Every session
-            generates a shareable report. No data is collected — everything runs in your browser.
-          </p>
-        </div>
-      </details>
-    </div>
-  </section>
-
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <p>MeetCost — Free meeting cost calculator. No tracking. No signup. Just math that hurts.</p>
-      <div class="footer-links">
-        <a href="/blog">Insights</a>
-        <a href="/blog/how-much-do-meetings-cost">Meeting Cost Stats</a>
-        <a href="/blog/meeting-cost-by-company-size">Cost by Company Size</a>
+        <h2>Free, Private, No Signup</h2>
+        <p>
+          MeetCost supports EUR and USD. Quick Calculator gives instant results with yearly
+          projections. Live Timer runs during meetings with a real-time cost counter. Every session
+          generates a shareable report. No data is collected — everything runs in your browser.
+        </p>
       </div>
+    </details>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p>MeetCost — Free meeting cost calculator. No tracking. No signup. Just math that hurts.</p>
+    <div class="footer-links">
+      <a href="/blog">Insights</a>
+      <a href="/blog/how-much-do-meetings-cost">Meeting Cost Stats</a>
+      <a href="/blog/meeting-cost-by-company-size">Cost by Company Size</a>
     </div>
-  </footer>
+  </div>
+</footer>
 </Base>
 
 <style>
@@ -107,6 +107,19 @@ import Nav from '../components/Nav.astro';
 </style>
 
 <script>
+  // Fix iframe height
   const frame = document.getElementById('calcFrame');
   if(frame){frame.onload=()=>{try{const h=frame.contentDocument.body.scrollHeight;if(h>100)frame.style.height=h+40+'px'}catch(e){}}}
+
+  // FIX 3: scroll to SEO body when details opens
+  const det = document.getElementById('seoDetails');
+  if(det){
+    det.addEventListener('toggle', () => {
+      if(det.open){
+        setTimeout(() => {
+          det.querySelector('.seo-body').scrollIntoView({behavior:'smooth', block:'start'});
+        }, 50);
+      }
+    });
+  }
 </script>
