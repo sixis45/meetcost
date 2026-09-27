@@ -20,14 +20,14 @@ export function getStaticPaths() {
   }
 
   const roles = [
-    { slug: 'engineers', label: 'Engineers', rate: 65, people: 6, duration: 60 },
-    { slug: 'designers', label: 'Designers', rate: 55, people: 5, duration: 45 },
-    { slug: 'managers', label: 'Managers', rate: 70, people: 8, duration: 60 },
-    { slug: 'executives', label: 'Executives', rate: 100, people: 5, duration: 60 },
-    { slug: 'sales-team', label: 'Sales Team', rate: 50, people: 8, duration: 30 },
-    { slug: 'startup-team', label: 'Startup Team', rate: 40, people: 5, duration: 30 },
-    { slug: 'remote-team', label: 'Remote Team', rate: 50, people: 7, duration: 45 },
-    { slug: 'product-team', label: 'Product Team', rate: 60, people: 6, duration: 60 },
+    { slug: 'engineers', label: 'Engineers', kind: 'engineering', who: 'engineers', rate: 65, people: 6, duration: 60 },
+    { slug: 'designers', label: 'Designers', kind: 'design', who: 'designers', rate: 55, people: 5, duration: 45 },
+    { slug: 'managers', label: 'Managers', kind: 'management', who: 'managers', rate: 70, people: 8, duration: 60 },
+    { slug: 'executives', label: 'Executives', kind: 'executive', who: 'executives', rate: 100, people: 5, duration: 60 },
+    { slug: 'sales-team', label: 'Sales Teams', kind: 'sales team', who: 'salespeople', rate: 50, people: 8, duration: 30 },
+    { slug: 'startup-team', label: 'Startup Teams', kind: 'startup team', who: 'people', rate: 40, people: 5, duration: 30 },
+    { slug: 'remote-team', label: 'Remote Teams', kind: 'remote team', who: 'people', rate: 50, people: 7, duration: 45 },
+    { slug: 'product-team', label: 'Product Teams', kind: 'product team', who: 'people', rate: 60, people: 6, duration: 60 },
   ];
 
   for (const role of roles) {
@@ -35,7 +35,7 @@ export function getStaticPaths() {
     const yearly = cost * 5 * 48;
     paths.push({
       params: { slug: role.slug },
-      props: { people: role.people, duration: role.duration, rate: role.rate, roleLabel: role.label, title: 'Meeting Cost Calculator for ' + role.label, description: 'A typical ' + role.label.toLowerCase() + ' meeting costs $' + cost.toFixed(0) + ' per session. That is $' + yearly.toLocaleString() + '/year if daily.', costExact: cost, yearlyExact: yearly }
+      props: { people: role.people, duration: role.duration, rate: role.rate, roleLabel: role.label, roleKind: role.kind, roleWho: role.who, title: 'Meeting Cost Calculator for ' + role.label, description: 'A typical ' + role.kind + ' meeting costs $' + cost.toFixed(0) + ' per session. That is $' + yearly.toLocaleString() + '/year if daily.', costExact: cost, yearlyExact: yearly }
     });
   }
 
@@ -46,10 +46,13 @@ const props = Astro.props;
 const { people, duration, title, description } = props;
 const rate = props.rate || null;
 const roleLabel = props.roleLabel || null;
+const roleKind = props.roleKind || '';
+const roleWho = props.roleWho || '';
 const costExact = props.costExact || 0;
 const yearlyExact = props.yearlyExact || 0;
 const isRole = !!roleLabel;
 const durLabel = duration >= 60 ? (duration/60) + ' hour' + (duration > 60 ? 's' : '') : duration + ' minutes';
+const durAdj = duration >= 60 ? (duration/60) + '-hour' : duration + '-minute';
 const D = '$';
 
 // Pre-compute values for the template
@@ -124,7 +127,7 @@ const perMinRole = isRole ? (people * rate / 60).toFixed(2) : '0';
         <div>
           <h2>Breaking Down the Cost</h2>
           <p>
-            A {durLabel} meeting with {people} people consumes <strong>{personHours} person-hours</strong> of
+            A {durAdj} meeting with {people} people consumes <strong>{personHours} person-hours</strong> of
             collective effort. At a fully loaded cost of {D}50/hour, that is <strong>{D}{costAt50} per meeting</strong>.
             If it happens daily, that is <strong>{D}{yearlyAt50Daily} per year</strong>. Even weekly, it adds up
             to <strong>{D}{yearlyAt50Weekly} annually</strong>.
@@ -137,8 +140,8 @@ const perMinRole = isRole ? (people * rate / 60).toFixed(2) : '0';
         <div>
           <h2>Meeting Costs for {roleLabel}</h2>
           <p>
-            {roleLabel} meetings tend to be among the most expensive due to higher compensation and
-            opportunity cost. At {D}{rate}/hour fully loaded, every minute with {people} {roleLabel.toLowerCase()} costs {D}{perMinRole}.
+            {roleKind.charAt(0).toUpperCase() + roleKind.slice(1)} meetings tend to be among the most expensive due to higher compensation and
+            opportunity cost. At {D}{rate}/hour fully loaded, every minute with {people} {roleWho} costs {D}{perMinRole}.
             Protect their focus time, batch meetings together, and reserve synchronous time for decisions
             that genuinely require real-time discussion.
           </p>
