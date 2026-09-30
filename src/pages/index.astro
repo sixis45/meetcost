@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
+import CalculatorFrame from '../components/CalculatorFrame.astro';
 ---
 
 <Base
@@ -11,7 +12,7 @@ import Nav from '../components/Nav.astro';
 <Nav />
 
 <div class="calc-wrapper">
-  <iframe src="/calculator.html" title="Meeting Cost Calculator" class="calc-frame" id="calcFrame"></iframe>
+  <CalculatorFrame />
 </div>
 
 <section class="seo-content">
@@ -84,8 +85,7 @@ import Nav from '../components/Nav.astro';
 </Base>
 
 <style>
-  .calc-wrapper{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 16px}
-  .calc-frame{width:100%;height:900px;border:none;border-radius:16px;background:var(--surface)}
+  .calc-wrapper{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 8px}
   .seo-content{position:relative;z-index:1;border-top:1px solid var(--border);margin-top:40px}
   .seo-inner{max-width:680px;margin:0 auto;padding:48px 24px 40px}
   .seo-collapse{border:none}
@@ -103,14 +103,9 @@ import Nav from '../components/Nav.astro';
   .footer-links{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
   .footer-links a{font-size:13px;color:var(--text-dim);transition:color .15s}
   .footer-links a:hover{color:var(--accent);text-decoration:none}
-  @media(max-width:600px){.calc-frame{height:820px}}
 </style>
 
 <script>
-  // Fix iframe height
-  const frame = document.getElementById('calcFrame');
-  if(frame){frame.onload=()=>{try{const h=frame.contentDocument.body.scrollHeight;if(h>100)frame.style.height=h+40+'px'}catch(e){}}}
-
   // FIX 3: scroll to SEO body when details opens
   const det = document.getElementById('seoDetails');
   if(det){

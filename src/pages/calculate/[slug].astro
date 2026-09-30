@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Nav from '../../components/Nav.astro';
+import CalculatorFrame from '../../components/CalculatorFrame.astro';
 
 export function getStaticPaths() {
   const people = [2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20, 25, 30, 50];
@@ -119,7 +120,7 @@ const perMinRole = isRole ? (people * rate / 60).toFixed(2) : '0';
     )}
 
     <div class="calc-cta">
-      <iframe src="/calculator.html" title="Meeting Cost Calculator" class="calc-frame" id="calcFrame"></iframe>
+      <CalculatorFrame />
     </div>
 
     <div class="calc-content">
@@ -181,7 +182,6 @@ const perMinRole = isRole ? (people * rate / 60).toFixed(2) : '0';
   .role-stat.yearly .role-number{color:var(--red)}
   .role-label{font-size:13px;color:var(--text-dim)}
   .calc-cta{margin-bottom:40px}
-  .calc-frame{width:100%;height:700px;border:none;border-radius:16px;background:var(--surface)}
   .calc-content{line-height:1.8;font-size:16px}
   .calc-content h2{font-size:22px;font-weight:700;margin:36px 0 12px}
   .calc-content p{color:rgba(232,232,240,0.85);margin-bottom:16px}
@@ -192,5 +192,5 @@ const perMinRole = isRole ? (people * rate / 60).toFixed(2) : '0';
   .footer-links{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
   .footer-links a{font-size:13px;color:var(--text-dim);transition:color .15s}
   .footer-links a:hover{color:var(--accent);text-decoration:none}
-  @media(max-width:600px){.cost-row{grid-template-columns:1fr 1fr;gap:8px;padding:10px 14px}.cost-row.header{display:none}.role-result{flex-direction:column}.calc-frame{height:600px}}
+  @media(max-width:600px){.cost-row{grid-template-columns:1fr 1fr;gap:8px;padding:10px 14px}.cost-row.header{display:none}.role-result{flex-direction:column}}
 </style>

@@ -1,0 +1,19 @@
+<iframe src="/calculator.html" title="Meeting Cost Calculator" class="calc-frame" id="calcFrame"></iframe>
+
+<style>
+  .calc-frame{display:block;width:100%;height:740px;border:none;background:transparent;color-scheme:dark}
+  @media(max-width:560px){.calc-frame{height:860px}}
+</style>
+
+<script>
+  // The calculator posts its content height, so the frame fits it without inner scrolling
+  const frame = document.getElementById('calcFrame');
+  if (frame) {
+    const fit = (h) => { if (h > 100) frame.style.height = h + 'px'; };
+    window.addEventListener('message', (e) => {
+      if (e.origin === location.origin && e.source === frame.contentWindow && e.data?.type === 'meetcost:height') fit(e.data.height);
+    });
+    // The frame may have rendered before this listener was attached
+    try { const box = frame.contentDocument?.querySelector('.container'); if (box) fit(Math.ceil(box.getBoundingClientRect().height)); } catch (e) {}
+  }
+</script>
